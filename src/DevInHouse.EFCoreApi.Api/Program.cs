@@ -1,4 +1,6 @@
 using DevInHouse.EFCoreApi.Core.Data.Context;
+using DevInHouse.EFCoreApi.Core.Interfaces;
+using DevInHouse.EFCoreApi.Core.Services;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -12,6 +14,7 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<DataContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"))
 );
+builder.Services.AddScoped<ILivroService, LivroService>();
 
 var app = builder.Build();
 

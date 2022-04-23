@@ -17,6 +17,13 @@ namespace DevInHouse.EFCoreApi.Core.Data.Mappings
                 .HasMaxLength(100)
                 .IsUnicode(false)
                 .IsRequired();
+
+            builder.HasData(new List<Categoria>
+            {
+                new Categoria(1, "Aventura"),
+                new Categoria(2, "Romance"),
+                new Categoria(3, "Terror")
+            });
         }
     }
 }
