@@ -12,6 +12,8 @@ namespace DevInHouse.EFCoreApi.Core.Interfaces
 
         public void AtualizarLivro(Livro livroOriginal, Livro livroAlteracoes);
 
+        public void AtualizarPrecoLivro(Livro livroOriginal, decimal preco);
+
         public void RemoverLivro(int id);
     }
 }

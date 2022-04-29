@@ -28,5 +28,10 @@ namespace DevInHouse.EFCoreApi.Core.Entities
             DataPublicacao = dataPublicacao;
             Preco = preco;
         }
+
+        public void AlterarPrecoLivro(decimal preco)
+        {
+            Preco = preco;
+        }
     }
 }

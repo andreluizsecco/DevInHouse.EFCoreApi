@@ -48,11 +48,17 @@ namespace DevInHouse.EFCoreApi.Core.Services
             _context.SaveChanges();
         }
 
+        public void AtualizarPrecoLivro(Livro livroOriginal, decimal preco)
+        {
+            livroOriginal.AlterarPrecoLivro(preco);
+            _context.SaveChanges();
+        }
+
         public void RemoverLivro(int id)
         {
             var livro = ObterPorId(id);
             if (livro == null)
-                throw new Exception("O livro com o identificador informado não existe");
+                throw new ArgumentException("O livro com o identificador informado não existe", "id");
 
             _context.Livros.Remove(livro);
             _context.SaveChanges();

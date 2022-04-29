@@ -1,3 +1,4 @@
+using DevInHouse.EFCoreApi.Api.DTOs.Request;
 using DevInHouse.EFCoreApi.Core.Entities;
 using DevInHouse.EFCoreApi.Core.Interfaces;
 using Microsoft.AspNetCore.Mvc;
@@ -36,22 +37,36 @@ namespace DevInHouse.EFCoreApi.Api.Controllers
         }
 
         [HttpPost]
-        public ActionResult CriarLivro(Livro livro)
+        public ActionResult CriarLivro(LivroRequest livro)
         {
-            var id = _livroService.CriarLivro(livro);
+            var livroEntidade = livro.ConverterParaEntidade();
+            var id = _livroService.CriarLivro(livroEntidade);
             return CreatedAtAction(nameof(ObterLivroPorId), new { Id = id }, id);
         }
 
         [HttpPut("{id}")]
-        public ActionResult AtualizarLivro(int id, Livro livro)
+        public ActionResult AtualizarLivro(int id, LivroRequest livro)
         {
             var livroOriginal = _livroService.ObterPorId(id);
-            if (livro == null)
+            if (livroOriginal == null)
                 return NotFound();
 
-            _livroService.AtualizarLivro(livroOriginal, livro);
+            var livroAlteracoes = livro.ConverterParaEntidade();
+            _livroService.AtualizarLivro(livroOriginal, livroAlteracoes);
             return NoContent();
         }
+        
+        [HttpPatch("{id}/preco/{preco}")]
+        public ActionResult AtualizarPrecoLivro(int id, decimal preco)
+        {
+            var livroOriginal = _livroService.ObterPorId(id);
+            if (livroOriginal == null)
+                return NotFound();
+
+            _livroService.AtualizarPrecoLivro(livroOriginal, preco);
+            return NoContent();
+        }
+
 
         [HttpDelete("{id}")]
         public ActionResult ExcluirLivro(int id)
@@ -61,11 +76,15 @@ namespace DevInHouse.EFCoreApi.Api.Controllers
                 _livroService.RemoverLivro(id);
                 return NoContent();
             }
-            catch (Exception ex)
+            catch (ArgumentException ex)
             {
-                if (ex.Message.Contains("não existe"))
+                if (ex.ParamName.Equals("id"))
                     return NotFound();
                 
+                return BadRequest();
+            }
+            catch (Exception ex)
+            {                
                 return StatusCode(StatusCodes.Status500InternalServerError, new { Mensagem = ex.Message });
             }
         }
